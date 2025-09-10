@@ -2,17 +2,31 @@ package utils
 
 import (
 	"bytes"
-	"os"
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
 	"text/template"
 	"unicode"
 )
 
 func RenderTemplate(templatePath, outputPath string, data interface{}) error {
-	// 读取模板文件
-	tmplContent, err := os.ReadFile(templatePath)
+	templatePath = strings.ReplaceAll(templatePath, "templates", "")
+	resp, err := http.Get(fmt.Sprintf("https://github.com/bitcommune/templates/blob/main/%v?raw=true", templatePath))
 	if err != nil {
 		return err
 	}
+
+	// 读取模板文件
+	defer resp.Body.Close()
+	tmplContent, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	//tmplContent, err := os.ReadFile(templatePath)
+	//if err != nil {
+	//	return err
+	//}
 
 	// 解析模板
 	tmpl, err := template.New("template").Parse(string(tmplContent))

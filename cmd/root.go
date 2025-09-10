@@ -13,8 +13,8 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "microgen",
-	Short: "Microgen is a microservice code generator",
+	Use:   "micro",
+	Short: "micro is a microservice code generator",
 	Long: `A CLI tool for generating microservice project structure, 
 RPC services, proto files, database integration, middleware, 
 and Docker configuration.`,
@@ -34,7 +34,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.microgen.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.micro.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 
 	// 添加子命令

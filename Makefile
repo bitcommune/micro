@@ -1,12 +1,14 @@
-AppName := micro
-BuildDir := $(CURDIR)/build
-ApplicationPath := $(BuildDir)/bin/$(AppName)
+export GO111MODULE=on
 
-# 编译windows
+-include .env
+
+#编译 Linux 版本
+BuildLinux:
+	@go build -o micro $(BuildDir) .
+
+#编译 Windows 版本
 BuildWindows:
-	set GOOS=windows
-	set GOARCH=amd64
-	go build -o $(GOPATH)/bin/$(AppName).exe .
+	@go build -o micro.exe $(BuildDir) .
 
-
-.PHONY: BuildWindows
+#编译所有环境版本
+BuildAll: BuildLinux BuildWindows
