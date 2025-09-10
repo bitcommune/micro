@@ -2,20 +2,14 @@ package utils
 
 import (
 	"bytes"
-	"fmt"
 	"os"
-	"path/filepath"
 	"text/template"
 	"unicode"
 )
 
 func RenderTemplate(templatePath, outputPath string, data interface{}) error {
-	exPath, err := os.Getwd()
-	if err != nil {
-		return err
-	}
 	// 读取模板文件
-	tmplContent, err := os.ReadFile(fmt.Sprintf("%s/%v", filepath.Dir(exPath), templatePath))
+	tmplContent, err := os.ReadFile(templatePath)
 	if err != nil {
 		return err
 	}
