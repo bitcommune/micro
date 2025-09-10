@@ -1,11 +1,11 @@
 # 安装和使用
 1. 安装工具
-   go install github.com/your-username/micro@latest
+   go install github.com/bitcommune/micro@latest
 2. 初始化新项目
    micro init my-microservice
    cd my-microservice
 3. 创建 proto 文件
-   micro proto hello --package=myapp --gopackage=github.com/your-username/my-microservice/pkg/pb
+   micro proto hello --package=myapp --gopackage=github.com/bitcommune/my-microservice/pkg/pb
 4. 创建服务
    micro service hello
 5. 编译 proto 文件（需要安装 protoc）

@@ -65,6 +65,6 @@ var protoCmd = &cobra.Command{
 
 func init() {
 	protoCmd.Flags().StringVarP(&protoPackage, "package", "p", "myapp", "Package name for the proto file")
-	protoCmd.Flags().StringVarP(&goPackage, "gopackage", "g", "github.com/your-username/myapp/pkg/pb", "Go package path")
+	protoCmd.Flags().StringVarP(&goPackage, "gopackage", "g", "github.com/bitcommune/myapp/pkg/pb", "Go package path")
 	protoCmd.Flags().BoolVarP(&compileProto, "compile", "c", false, "Compile proto file after generation")
 }

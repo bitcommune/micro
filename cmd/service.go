@@ -18,7 +18,7 @@ var serviceCmd = &cobra.Command{
 
 		config := types.ServiceConfig{
 			Name:        serviceName,
-			PackageName: "github.com/your-username/myapp/pkg/pb",
+			PackageName: fmt.Sprintf("github.com/bitcommune/%v/pkg/pb", serviceName),
 			RPCs: []types.RPC{
 				{Name: "Example", Request: "ExampleRequest", Response: "ExampleResponse"},
 			},
