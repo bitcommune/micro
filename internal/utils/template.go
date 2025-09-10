@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"text/template"
 	"unicode"
@@ -9,7 +10,7 @@ import (
 
 func RenderTemplate(templatePath, outputPath string, data interface{}) error {
 	// 读取模板文件
-	tmplContent, err := os.ReadFile(templatePath)
+	tmplContent, err := os.ReadFile(fmt.Sprintf("../%v", templatePath))
 	if err != nil {
 		return err
 	}

@@ -7,16 +7,11 @@ import (
 )
 
 func TestRender(t *testing.T) {
-	templatePath := "../templates/project/main.go.tmpl"
-	//if err := utils.RenderTemplate("templates/project/main.go.tmpl", "", ""); err != nil {
+	//templatePath := "../templates/project/main.go.tmpl"
+	//tmplContent, err := os.ReadFile(templatePath)
+	//if err != nil {
 	//	panic(err)
 	//}
 
-	// 读取模板文件
-	tmplContent, err := os.ReadFile(templatePath)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(string(tmplContent))
+	fmt.Println(templates)
 }
