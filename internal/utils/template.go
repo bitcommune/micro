@@ -10,7 +10,7 @@ import (
 
 func RenderTemplate(templatePath, outputPath string, data interface{}) error {
 	// 读取模板文件
-	tmplContent, err := os.ReadFile(fmt.Sprintf("../%v", templatePath))
+	tmplContent, err := os.ReadFile(fmt.Sprintf("../../%v", templatePath))
 	if err != nil {
 		return err
 	}
