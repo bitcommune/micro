@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "50051:50051"
+    environment:
+      - ENVIRONMENT=development
+    volumes:
+      - ./configs:/app/configs
+    depends_on:
+      {{if .WithDB}}
+      - postgres
+      {{end}}
+      - redis
+    networks:
+      - microgen-network
+
+  {{if .WithDB}}
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: {{if .ProjectName}}{{.ProjectName}}{{else}}mydb{{end}}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      - microgen-network
+  {{end}}
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - microgen-network
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.35
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+    networks:
+      - microgen-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./deployments/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - microgen-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - microgen-network
+
+volumes:
+  {{if .WithDB}}
+  postgres-data:
+  {{end}}
+  redis-data:
+  grafana-data:
+
+networks:
+  microgen-network:
+    driver: bridge

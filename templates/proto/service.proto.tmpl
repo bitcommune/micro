@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package {{.PackageName}};
+option go_package = "{{.GoPackage}}";
+
+service {{.ServiceName}} {
+  {{range .RPCs}}
+  rpc {{.Name}}({{.Request}}) returns ({{.Response}}) {}
+  {{end}}
+}
+
+{{range .Messages}}
+message {{.Name}} {
+  {{range .Fields}}
+  {{.Type}} {{.Name}} = {{.Tag}};
+  {{end}}
+}
+{{end}}

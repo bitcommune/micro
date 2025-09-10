@@ -1,0 +1,27 @@
+package handler
+
+import (
+	"context"
+
+	"{{.PackageName}}"
+	"{{.PackageName}}/internal/service"
+)
+
+// {{.ServiceName}}Handler handles HTTP requests for the {{.ServiceName}} service
+type {{.ServiceName}}Handler struct {
+	service *service.{{.ServiceName}}
+}
+
+// New{{.ServiceName}}Handler creates a new handler instance
+func New{{.ServiceName}}Handler(service *service.{{.ServiceName}}) *{{.ServiceName}}Handler {
+	return &{{.ServiceName}}Handler{
+		service: service,
+	}
+}
+
+{{range .RPCs}}
+// Handle{{.Name}} handles HTTP requests for the {{.Name}} method
+func (h *{{$.ServiceName}}Handler) Handle{{.Name}}(ctx context.Context, req *pb.{{.Request}}) (*pb.{{.Response}}, error) {
+	return h.service.{{.Name}}(ctx, req)
+}
+{{end}}

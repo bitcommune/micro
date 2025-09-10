@@ -1,0 +1,46 @@
+# Build stage
+FROM golang:1.21-alpine AS builder
+
+# Install dependencies
+RUN apk add --no-cache git make protoc protobuf-dev
+
+# Set working directory
+WORKDIR /app
+
+# Copy go mod and sum files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Generate protobuf code (if needed)
+RUN if [ -d "./api/proto" ]; then \
+      find ./api/proto -name "*.proto" -exec protoc --go_out=. --go-grpc_out=. {} \; ; \
+    fi
+
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /go/bin/{{.ProjectName}} ./cmd/server
+
+# Final stage
+FROM alpine:latest
+
+# Install CA certificates for SSL
+RUN apk --no-cache add ca-certificates
+
+# Set working directory
+WORKDIR /root/
+
+# Copy binary from builder
+COPY --from=builder /go/bin/{{.ProjectName}} .
+
+# Copy config files
+COPY configs/config.yaml ./configs/
+
+# Expose port
+EXPOSE 50051
+
+# Command to run the application
+CMD ["./{{.ProjectName}}"]

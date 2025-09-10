@@ -1,0 +1,73 @@
+package middleware
+
+import (
+	"context"
+	"strings"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
+)
+
+// AuthInterceptor handles authentication for gRPC requests
+func AuthInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	// Skip auth for certain methods (like login)
+	if isPublicMethod(info.FullMethod) {
+		return handler(ctx, req)
+	}
+
+	// Extract token from metadata
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Errorf(codes.Unauthenticated, "metadata is not provided")
+	}
+
+	authHeader, ok := md["authorization"]
+	if !ok || len(authHeader) == 0 {
+		return nil, status.Errorf(codes.Unauthenticated, "authorization token is not provided")
+	}
+
+	token := strings.TrimPrefix(authHeader[0], "Bearer ")
+
+	// Validate token
+	userID, err := validateToken(token)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)
+	}
+
+	// Add user ID to context
+	ctx = context.WithValue(ctx, "userID", userID)
+
+	return handler(ctx, req)
+}
+
+// isPublicMethod checks if a method should skip authentication
+func isPublicMethod(method string) bool {
+	publicMethods := []string{
+		"/grpc.health.v1.Health/Check",
+		"/grpc.health.v1.Health/Watch",
+		"/{{.PackageName}}.{{.ServiceName}}/Login",
+	}
+
+	for _, m := range publicMethods {
+		if method == m {
+			return true
+		}
+	}
+
+	return false
+}
+
+// validateToken validates a JWT token and returns the user ID
+func validateToken(token string) (string, error) {
+	// TODO: Implement actual token validation
+	// This is a placeholder implementation
+
+	if token == "" {
+		return "", status.Errorf(codes.Unauthenticated, "empty token")
+	}
+
+	// For demo purposes, assume token is valid and return a user ID
+	return "user-123", nil
+}

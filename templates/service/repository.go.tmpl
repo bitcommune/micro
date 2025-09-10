@@ -1,0 +1,54 @@
+package repository
+
+import (
+	"context"
+
+	"gorm.io/gorm"
+)
+
+// {{.Model.Name}}Repository handles database operations for {{.Model.Name}} entities
+type {{.Model.Name}}Repository struct {
+	db *gorm.DB
+}
+
+// New{{.Model.Name}}Repository creates a new repository instance
+func New{{.Model.Name}}Repository(db *gorm.DB) *{{.Model.Name}}Repository {
+	return &{{.Model.Name}}Repository{
+		db: db,
+	}
+}
+
+// Create creates a new {{.Model.Name}} record
+func (r *{{.Model.Name}}Repository) Create(ctx context.Context, {{.Model.Name | ToLower}} *{{.Model.Name}}) error {
+	return r.db.WithContext(ctx).Create({{.Model.Name | ToLower}}).Error
+}
+
+// FindByID finds a {{.Model.Name}} by its ID
+func (r *{{.Model.Name}}Repository) FindByID(ctx context.Context, id uint) (*{{.Model.Name}}, error) {
+	var {{.Model.Name | ToLower}} {{.Model.Name}}
+	err := r.db.WithContext(ctx).First(&{{.Model.Name | ToLower}}, id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &{{.Model.Name | ToLower}}, nil
+}
+
+// Update updates an existing {{.Model.Name}} record
+func (r *{{.Model.Name}}Repository) Update(ctx context.Context, {{.Model.Name | ToLower}} *{{.Model.Name}}) error {
+	return r.db.WithContext(ctx).Save({{.Model.Name | ToLower}}).Error
+}
+
+// Delete deletes a {{.Model.Name}} record
+func (r *{{.Model.Name}}Repository) Delete(ctx context.Context, id uint) error {
+	return r.db.WithContext(ctx).Delete(&{{.Model.Name}}{}, id).Error
+}
+
+// List returns a list of {{.Model.Name}} records with pagination
+func (r *{{.Model.Name}}Repository) List(ctx context.Context, limit, offset int) ([]{{.Model.Name}}, error) {
+	var {{.Model.Name | ToLower}}s []{{.Model.Name}}
+	err := r.db.WithContext(ctx).Limit(limit).Offset(offset).Find(&{{.Model.Name | ToLower}}s).Error
+	if err != nil {
+		return nil, err
+	}
+	return {{.Model.Name | ToLower}}s, nil
+}
