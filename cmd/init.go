@@ -27,7 +27,7 @@ var initCmd = &cobra.Command{
 		config := types.ProjectConfig{
 			Name:           projectName,
 			Version:        "1.0.0",
-			GoModule:       fmt.Sprintf("github.com/your-username/%s", projectName),
+			GoModule:       fmt.Sprintf("github.com/bitcommune/%s", projectName),
 			WithDB:         withDB,
 			DBType:         dbType,
 			WithDocker:     withDocker,
@@ -44,9 +44,9 @@ var initCmd = &cobra.Command{
 }
 
 func init() {
-	initCmd.Flags().BoolVar(&withDB, "with-db", false, "Include database integration")
+	initCmd.Flags().BoolVar(&withDB, "with-db", true, "Include database integration")
 	initCmd.Flags().StringVar(&dbType, "db-type", "postgres", "Database type (postgres, mysql, sqlite)")
-	initCmd.Flags().BoolVar(&withDocker, "with-docker", false, "Include Docker configuration")
-	initCmd.Flags().BoolVar(&withTests, "with-tests", false, "Include test templates")
-	initCmd.Flags().BoolVar(&withMiddleware, "with-middleware", false, "Include middleware")
+	initCmd.Flags().BoolVar(&withDocker, "with-docker", true, "Include Docker configuration")
+	initCmd.Flags().BoolVar(&withTests, "with-tests", true, "Include test templates")
+	initCmd.Flags().BoolVar(&withMiddleware, "with-middleware", true, "Include middleware")
 }
