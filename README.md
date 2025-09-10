@@ -1,5 +1,21 @@
+# 安装和使用
+1. 安装工具
+   go install github.com/your-username/microgen@latest
+2. 初始化新项目
+   microgen init my-microservice
+   cd my-microservice
+3. 创建 proto 文件
+   microgen proto hello --package=myapp --gopackage=github.com/your-username/my-microservice/pkg/pb
+4. 创建服务
+   microgen service hello
+5. 编译 proto 文件（需要安装 protoc）
+
+
+# 手动执行protoc命令编译proto文件
+protoc --go_out=. --go-grpc_out=. api/proto/hello.proto
+
 ```
-microgen/
+micro/
 ├── cmd/
 │   ├── root.go
 │   ├── init.go
@@ -51,3 +67,5 @@ microgen/
 ├── go.sum
 └── main.go
 ```
+
+
